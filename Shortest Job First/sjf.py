@@ -1,4 +1,5 @@
-# First Come First Serve Scheduling for tasks
+# Shortest Job First Scheduling algorithm
+
 import sys
 from queue import Queue
 from add_process import Process
@@ -9,11 +10,13 @@ processList = []
 global detailedsummary
 detailedsummary = []
 
+
 def unique(p, pId):
     for i in range(len(p)):
         if p[i].Id == pId:
             return False
     return True
+
 
 def countProcess(p):
     count = 0
@@ -21,6 +24,7 @@ def countProcess(p):
         if p[i].log == False:
             count += 1
     return count
+
 
 def disp(p):
     global currentTime
@@ -32,8 +36,9 @@ def disp(p):
     print("")
     print('Current Statuses of Queue')
     print("Queue", end="\t")
-    FCFS.display()
+    SJF.display()
     print("-" * 100)
+
 
 # function to add processes
 def add():
@@ -57,48 +62,46 @@ def add():
     print("-" * 100)
     return p
 
+
 def Scheduling(p):
     global currentTime
     global processList
     global detailedsummary
-    for a0 in sorted(p, key=lambda x: x.arrivalTime):
-        # print(a0.Id,a0.arrivalTime)
+    for a0 in sorted(p, key=lambda x: x.taskTime):
         if a0.arrivalTime <= currentTime and not a0.log:  # process arrival time is the current time
-            FCFS.enqueue(a0)
+            SJF.enqueue(a0)
             a0.log = True
     disp(p)
 
-    # if Queue1 and Queue2 are both empty, then the CPU moves to lower priority queues
-    # the last / lowest priority queue is the FCFS
-    if not FCFS.isEmpty():
+    if not SJF.is_empty():
         print("The queue is executed by the CPU")
-        currentProcess = FCFS.peek()
+        currentProcess = SJF.peek()
         print("Current Process being executed", "P:", end=" ")
         currentProcess.display()
-        for a0 in sorted(p, key=lambda x: x.arrivalTime):
+        for a0 in sorted(p, key=lambda x: x.taskTime):
             # print(a0.Id,a0.arrivalTime)
-            if a0.arrivalTime >= currentTime and a0.arrivalTime <= currentTime + currentProcess.taskTime and not a0.log:  # process arrival time is the current time
-                FCFS.enqueue(a0)
+            if a0.arrivalTime >= currentTime and a0.arrivalTime <= currentTime + currentProcess.taskTime and not a0.log:
+                # process arrival time is the current time
+                SJF.enqueue(a0)
                 a0.log = True
                 currentProcess.taskTime -= (a0.arrivalTime - currentTime)
                 currentTime = a0.arrivalTime  # type: object
                 t = [str(currentProcess.Id), str(currentTime), str(currentProcess.taskTime), "Queue2"]
-                #processList.append(t)
                 detailedsummary.append(t)
                 return
         currentTime += currentProcess.taskTime
         currentProcess.taskTime = 0
         print("Process completed", "P:", currentProcess.Id)
-        FCFS.dequeue()
+        SJF.dequeue()
         t = [str(currentProcess.Id), str(currentTime), str(currentProcess.taskTime), "FCFS"]
         processList.append(t)
         detailedsummary.append(t)
-    for a0 in sorted(p, key=lambda x: x.arrivalTime):
+    for a0 in sorted(p, key=lambda x: x.taskTime):
         # print(a0.Id,a0.arrivalTime)
         if a0.arrivalTime <= currentTime and not a0.log:  # process arrival time is the current time
-            FCFS.enqueue(a0)
+            SJF.enqueue(a0)
             a0.log = True
-    if FCFS.isEmpty():
+    if SJF.is_empty():
         if countProcess(p) == 0:
             print("-" * 100)
             disp(p)
@@ -115,7 +118,7 @@ def Scheduling(p):
             print("\t\t\t\tProcess ID \t\t\t Current Time   \t\t  Task Time Remaining ")
             for row in processList:
                 print("{: >20} {: >20} {: >20}\n".format(*row))
-                print("\t\t\t\t",end = "")
+                print("\t\t\t\t", end="")
                 print("-"*65)
             print("\n")
             print("\t\t\t\t                        END")
@@ -145,7 +148,9 @@ def Scheduling(p):
             sys.exit(0)
         else:
             currentTime += 1
-FCFS = Queue()
+
+
+SJF = Queue()
 p = add()
 currentTime = 0  # type: int
 end_time = 1000
