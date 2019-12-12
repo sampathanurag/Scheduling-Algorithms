@@ -71,37 +71,24 @@ def Scheduling(p):
         if a0.arrivalTime <= currentTime and not a0.log:  # process arrival time is the current time
             SJF.enqueue(a0)
             a0.log = True
-    disp(p)
+            break
 
     if not SJF.is_empty():
+        disp(p)
         print("The queue is executed by the CPU")
         currentProcess = SJF.peek()
         print("Current Process being executed", "P:", end=" ")
         currentProcess.display()
-        for a0 in sorted(p, key=lambda x: x.taskTime):
-            # print(a0.Id,a0.arrivalTime)
-            if a0.arrivalTime >= currentTime and a0.arrivalTime <= currentTime + currentProcess.taskTime and not a0.log:
-                # process arrival time is the current time
-                SJF.enqueue(a0)
-                a0.log = True
-                currentProcess.taskTime -= (a0.arrivalTime - currentTime)
-                currentTime = a0.arrivalTime  # type: object
-                t = [str(currentProcess.Id), str(currentTime), str(currentProcess.taskTime), "Queue2"]
-                detailedsummary.append(t)
-                return
         currentTime += currentProcess.taskTime
         currentProcess.taskTime = 0
         print("Process completed", "P:", currentProcess.Id)
         SJF.dequeue()
-        t = [str(currentProcess.Id), str(currentTime), str(currentProcess.taskTime), "FCFS"]
+        t = [str(currentProcess.Id), str(currentTime), str(currentProcess.taskTime), "SJF"]
         processList.append(t)
         detailedsummary.append(t)
-    for a0 in sorted(p, key=lambda x: x.taskTime):
-        # print(a0.Id,a0.arrivalTime)
-        if a0.arrivalTime <= currentTime and not a0.log:  # process arrival time is the current time
-            SJF.enqueue(a0)
-            a0.log = True
-    if SJF.is_empty():
+
+    elif SJF.is_empty():
+
         if countProcess(p) == 0:
             print("-" * 100)
             disp(p)
@@ -147,6 +134,7 @@ def Scheduling(p):
                 print("-" * 100)
             sys.exit(0)
         else:
+            disp(p)
             currentTime += 1
 
 
