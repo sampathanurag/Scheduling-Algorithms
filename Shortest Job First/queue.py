@@ -7,7 +7,9 @@ from add_process import Process
 
 
 class Queue:
-    # class used to create objects which have different attributes and features
+    """
+    class used to create objects which have different attributes and features
+    """
     def __init__(self):
         """
         :param queue: List queue to simulate the data structure queue

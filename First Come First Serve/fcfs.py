@@ -1,4 +1,14 @@
 # First Come First Serve Scheduling for tasks
+"""
+Given In processes with their burst times, the task is to find average waiting time and average turn
+around time using FCFS scheduling algorithm.
+First in, first out (FIFO), also known as first come, first served (FCFS), is the simplest scheduling algorithm.
+FIFO simply queues processes in the order that they arrive in the ready queue.
+In this, the process that comes first will be executed first and next process starts only after the previous gets
+fully executed.
+"""
+
+#imports
 import sys
 from queue import Queue
 from add_process import Process
@@ -9,20 +19,39 @@ processList = []
 global detailedsummary
 detailedsummary = []
 
+
 def unique(p, pId):
+    """
+    Function to check for the uniqueness of the process id
+    :param p: Queue of processes
+    :param pId: Specific process id
+    :return: boolean
+    """
     for i in range(len(p)):
         if p[i].Id == pId:
             return False
     return True
 
+
 def countProcess(p):
+    """
+    Function to count the number of processes
+    :param p: Process queue
+    :return: int
+    """
     count = 0
     for i in range(len(p)):
         if p[i].log == False:
             count += 1
     return count
 
+
 def disp(p):
+    """
+    Function to display the current state of the scheduler
+    :param p: process list
+    :return: None
+    """
     global currentTime
     print("-" * 100)
     print("Current Time:", currentTime)
@@ -35,8 +64,13 @@ def disp(p):
     FCFS.display()
     print("-" * 100)
 
+
 # function to add processes
 def add():
+    """
+    Function to add the processes specifying the various attributes
+    :return: Process List
+    """
     p = []  # list of processes
     print("Enter the number of processes")
     ans = int(input().strip())
@@ -57,7 +91,13 @@ def add():
     print("-" * 100)
     return p
 
+
 def Scheduling(p):
+    """
+    FCFS scheduling algorithm
+    :param p: Process List
+    :return: None
+    """
     global currentTime
     global processList
     global detailedsummary
@@ -70,7 +110,7 @@ def Scheduling(p):
 
     # if Queue1 and Queue2 are both empty, then the CPU moves to lower priority queues
     # the last / lowest priority queue is the FCFS
-    if not FCFS.isEmpty():
+    if not FCFS.is_empty():
         print("The queue is executed by the CPU")
         currentProcess = FCFS.peek()
         print("Current Process being executed", "P:", end=" ")
@@ -98,7 +138,7 @@ def Scheduling(p):
         if a0.arrivalTime <= currentTime and not a0.log:  # process arrival time is the current time
             FCFS.enqueue(a0)
             a0.log = True
-    if FCFS.isEmpty():
+    if FCFS.is_empty():
         if countProcess(p) == 0:
             print("-" * 100)
             disp(p)
@@ -145,6 +185,8 @@ def Scheduling(p):
             sys.exit(0)
         else:
             currentTime += 1
+
+
 FCFS = Queue()
 p = add()
 currentTime = 0  # type: int
